@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "axios": "^0.21.0",
     "dotenv": "^8.2.0",
+    "intl": "^1.2.5",
     "node-fetch": "^2.6.1",
     "node-telegram-bot-api": "^0.50.0"
   },
@@ -12,13 +14,8 @@
     "nodemon": "^2.0.6"
   },
   "scripts": {
-<<<<<<< HEAD
     "start": "node index.js",
     "dev": "nodemon index.js"
-=======
-    "start":"node index.js",
-    "dev":"nodemon index.js"
->>>>>>> b6421897f4f5a4b4848bee00cfffbe9d69ef595e
   },
   "repository": {
     "type": "git",
