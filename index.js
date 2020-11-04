@@ -2,15 +2,13 @@ require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const fetch = require("node-fetch");
 const Intl = require('intl');
+//this library is used because toLocaleString wasn't working 
 const axios = require('axios') 
-//this library is used beacse toLocaleString wasn't working 
 const token = process.env.TOKEN;
 
 const bot = new TelegramBot(token,{
     polling:true
 })
-
-
      fetch("https://api.rootnet.in/covid19-in/stats/latest")
     .then(res => res.json())
     .then((data)=>{
@@ -59,13 +57,17 @@ Recovered    :  ${new Intl.NumberFormat('en-IN').format(parseInt(loc.discharged)
                 }
             })
             if(match!=1){
-                bot.sendMessage(message.chat.id,"Not Found")
+                if(message.text=="/start"){
+
+                }else{
+                    bot.sendMessage(message.chat.id,"Not Found")
+                }
             }
         })
     })
     
-    //https://www.googleapis.com/youtube/v3/search?q=hello&key=AIzaSyD3HahrJCN2LAuk8O8xHXbqXVuf4WP9j2g
-
+    //https://www.googleapis.com/youtube/v3/search?q=hello&part=snippet&type=video&key=AIzaSyD3HahrJCN2LAuk8O8xHXbqXVuf4WP9j2g
+    //maxResults=10 can also be used
     /* no. of members
     bot.getChatMembersCount(message.chat.id)
     .then((data)=>console.log(data))
