@@ -122,14 +122,14 @@ Select the photo size :`, {
                                         var thumbnails = api.data.items[0].snippet.thumbnails
                                         bot.sendMessage(message.chat.id, "Wait for few seconds, may take some time");
                                         if (data == "default") {
-                                            bot.sendPhoto(message.chat.id, thumbnails.default.url);
+                                            bot.sendPhoto(message.chat.id,thumbnails.default.url);
                                         } else if (data == "medium") {
                                             bot.sendPhoto(message.chat.id, thumbnails.medium.url)
                                         } else if (data == "high") {
                                             bot.sendPhoto(message.chat.id, thumbnails.high.url)
-                                        } else if (data = 'standard') {
+                                        } else if (data == 'standard') {
                                             bot.sendPhoto(message.chat.id, thumbnails.standard.url)
-                                        } else {
+                                        } else if (data == 'maxres'){
                                             bot.sendPhoto(message.chat.id, thumbnails.maxres.url)
                                         }
                                     })
