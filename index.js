@@ -115,33 +115,33 @@ Select the photo size :`, {
                                 }
                             })
 
-                            bot.on("callback_query", function callback(callBackQuery) {
-                                console.log(callBackQuery)
+                            bot.on("callback_query", async function callback(callBackQuery) {
                                 const callBackData = callBackQuery.data;
                                 const thumbnails = data.items[0].snippet.thumbnails;
+                                await bot.sendMessage(message.chat.id,"Wait for few seconds")
                                 if (callBackData == "default") {
-                                    bot.sendPhoto(message.chat.id, thumbnails.default.url, {
+                                    await bot.sendPhoto(message.chat.id, thumbnails.default.url, {
                                         caption: "120x90"
                                     });
                                 } else if (callBackData == "medium") {
-                                    bot.sendPhoto(message.chat.id, thumbnails.medium.url, {
+                                    await bot.sendPhoto(message.chat.id, thumbnails.medium.url, {
                                         caption: "320x180"
                                     })
                                 } else if (callBackData == "high") {
-                                    bot.sendPhoto(message.chat.id, thumbnails.high.url, {
+                                    await bot.sendPhoto(message.chat.id, thumbnails.high.url, {
                                         caption: "480x360"
                                     })
                                 } else if (callBackData == 'standard') {
-                                    bot.sendPhoto(message.chat.id, thumbnails.standard.url, {
+                                    await bot.sendPhoto(message.chat.id, thumbnails.standard.url, {
                                         caption: "640x480"
                                     })
                                 } else if (callBackData == 'maxres') {
                                     if (thumbnails.maxres != undefined) {
-                                        bot.sendPhoto(message.chat.id, thumbnails.maxres.url, {
+                                        await bot.sendPhoto(message.chat.id, thumbnails.maxres.url, {
                                             caption: "1280x720"
                                         })
                                     } else {
-                                        bot.sendMessage(message.chat.id, "1280x720 is unavailable")
+                                        await bot.sendMessage(message.chat.id, "1280x720 is unavailable")
                                     }
                                 }
                                 callback(); //Main issue is not solved, this is just a jugaad which solved the problem.
