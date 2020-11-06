@@ -13,6 +13,8 @@ const bot = new TelegramBot(token, {
 var accessYoutubeApi = "https://www.googleapis.com/youtube/v3/videos?part=snippet&key=AIzaSyD3HahrJCN2LAuk8O8xHXbqXVuf4WP9j2g&id=";
 var regex = /(www.youtube.com)/gm;
 var matchRegion = 0;
+var titleOfVideo;
+var channelOfVideo;
 //just id is missing which we get using url
 fetch("https://api.rootnet.in/covid19-in/stats/latest")
     .then(res => res.json())
@@ -21,7 +23,7 @@ fetch("https://api.rootnet.in/covid19-in/stats/latest")
             if (match.input == "/covid") {
                 bot.sendMessage(message.chat.id, "No input")
             } else {
-                const region = match.input.split(' ')[1];
+                var region = match.input.split(' ')[1];
                 if (region.toLowerCase() == "india" || region.toLowerCase() == "ind") {
                     matchRegion = 1;
                     bot.sendMessage(message.chat.id, `Covid-19 in India
@@ -68,24 +70,22 @@ Enter the name of state or ut properly`);
 
 
 
-bot.onText(/\/yt/, (message, match) => { //ontext takes regex
+bot.onText(/\/yt/, async (message, match) => { //ontext takes regex
     if (match.input === "/yt") {
-        bot.sendMessage(message.chat.id, "No input")
+        await bot.sendMessage(message.chat.id, "No input")
     } else {
         const url = match.input.split(' ')[1];
         if (url.match(/v=(\w|-|_)+/g)) {
             var idOfVid = url.match(/v=(\w|-|_)+/g);
             idOfVid = idOfVid[0].slice(2);
-            var titleOfVideo;
-            var channelOfVideo;
             fetch(`${accessYoutubeApi}${idOfVid}`)
                 .then(res => res.json())
-                .then((data) => {
+                .then(async (data) => {
                     titleOfVideo = data.items[0].snippet.title;
                     channelOfVideo = data.items[0].snippet.channelTitle;
                     if (url != undefined) {
-                        if (regex.test(url)) {
-                            bot.sendMessage(message.chat.id, `${titleOfVideo}
+                        if (/(www.youtube.com)/gm.test(url)) {
+                            await bot.sendMessage(message.chat.id, `${titleOfVideo}
 ${channelOfVideo}
 Select the photo size :`, {
                                 reply_markup: {
@@ -96,43 +96,63 @@ Select the photo size :`, {
                                             },
                                             {
                                                 text: "320x180",
-                                                callback_data: "medium"
+                                                callback_data: 'medium'
                                             },
                                             {
                                                 text: "480x360",
-                                                callback_data: "high"
+                                                callback_data: 'high'
                                             },
                                             {
                                                 text: "640x480",
-                                                callback_data: "standard"
+                                                callback_data: 'standard'
                                             },
                                             {
                                                 text: "1280x720",
-                                                callback_data: "maxres"
+                                                callback_data: 'maxres'
                                             }
                                         ]
                                     ]
                                 }
                             })
 
-                            bot.on("callback_query", (callBackQuery) => {
-                                var data = callBackQuery.data;
-                                axios.get(`${accessYoutubeApi}${idOfVid}`)
-                                    .then((api) => {
-                                        var thumbnails = api.data.items[0].snippet.thumbnails
-                                        bot.sendMessage(message.chat.id, "Wait for few seconds, may take some time");
-                                        if (data == "default") {
-                                            bot.sendPhoto(message.chat.id,thumbnails.default.url);
-                                        } else if (data == "medium") {
-                                            bot.sendPhoto(message.chat.id, thumbnails.medium.url)
-                                        } else if (data == "high") {
-                                            bot.sendPhoto(message.chat.id, thumbnails.high.url)
-                                        } else if (data == 'standard') {
-                                            bot.sendPhoto(message.chat.id, thumbnails.standard.url)
-                                        } else if (data == 'maxres'){
-                                            bot.sendPhoto(message.chat.id, thumbnails.maxres.url)
-                                        }
+                            bot.on("callback_query", function callback(callBackQuery) {
+                                console.log(callBackQuery)
+                                const callBackData = callBackQuery.data;
+                                const thumbnails = data.items[0].snippet.thumbnails;
+                                if (callBackData == "default") {
+                                    bot.sendPhoto(message.chat.id, thumbnails.default.url, {
+                                        caption: "120x90"
+                                    });
+                                } else if (callBackData == "medium") {
+                                    bot.sendPhoto(message.chat.id, thumbnails.medium.url, {
+                                        caption: "320x180"
                                     })
+                                } else if (callBackData == "high") {
+                                    bot.sendPhoto(message.chat.id, thumbnails.high.url, {
+                                        caption: "480x360"
+                                    })
+                                } else if (callBackData == 'standard') {
+                                    bot.sendPhoto(message.chat.id, thumbnails.standard.url, {
+                                        caption: "640x480"
+                                    })
+                                } else if (callBackData == 'maxres') {
+                                    if (thumbnails.maxres != undefined) {
+                                        bot.sendPhoto(message.chat.id, thumbnails.maxres.url, {
+                                            caption: "1280x720"
+                                        })
+                                    } else {
+                                        bot.sendMessage(message.chat.id, "1280x720 is unavailable")
+                                    }
+                                }
+                                callback(); //Main issue is not solved, this is just a jugaad which solved the problem.
+                                /*bot.answerCallbackQuery(callBackQuery.id)
+                                .then((e) => {
+                                    if (callBackData.command == idOfVid) {
+                                        bot.sendMessage(message.chat.id, "Wait for few seconds, may take some time");
+                                        bot.sendPhoto(message.chat.id, thumbnails[callBackData].url)
+
+                                    }
+                                })*/
                             })
                         } else {
                             bot.sendMessage(message.chat.id, `Invalid URL
