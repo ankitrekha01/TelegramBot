@@ -8,7 +8,8 @@
     "dotenv": "^8.2.0",
     "intl": "^1.2.5",
     "node-fetch": "^2.6.1",
-    "node-telegram-bot-api": "^0.50.0"
+    "node-telegram-bot-api": "^0.50.0",
+    "youtube-dl": "^3.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"
