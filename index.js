@@ -1,3 +1,4 @@
+//Will add more features later 
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const fetch = require("node-fetch");
@@ -5,6 +6,9 @@ const Intl = require('intl');
 //this is used because toLocaleString wasn't working 
 const axios = require('axios')
 const token = process.env.TOKEN;
+
+const fs = require('fs');
+const ytdl = require('ytdl-core');
 
 const bot = new TelegramBot(token, {
     polling: true
@@ -15,6 +19,10 @@ var regex = /(www.youtube.com)/gm;
 var matchRegion = 0;
 var titleOfVideo;
 var channelOfVideo;
+bot.on("text",(m)=>{
+        //ytdl('http://www.youtube.com/watch?v=aqz-KE-bpKQ')
+    //.pipe(fs.createWriteStream('D:\\Still_Day\\ankit\\projects\\v.mp4'));
+})
 //just id is missing which we get using url
 fetch("https://api.rootnet.in/covid19-in/stats/latest")
     .then(res => res.json())
