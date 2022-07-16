@@ -1,4 +1,4 @@
-# telegram-bot
+# Telegram-bot
 * Thumbnail downloader for youtube videos.
 ![Imgur](https://i.imgur.com/sMtmEIV.jpg)
 
